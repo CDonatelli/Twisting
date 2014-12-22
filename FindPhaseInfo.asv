@@ -19,15 +19,15 @@ R1P1 = [time(R1pX),R1pY]; R1P2 = [time(R1vX), R1vY];
 P1P1 = [time(P1pX),P1pY]; P1P2 = [time(P1vX), P1vY]; 
 Y1P1 = [time(Y1pX),Y1pY]; Y1P2 = [time(Y1vX), Y1vY]; 
 
-R2P1 = [time(R2pX),R2pY]; R2P2 = [time(R2vX), R2vY]; 
-P2P1 = [time(P2pX),P2pY]; P2P2 = [time(P2vX), P2vY]; 
-Y2P1 = [time(Y2pX),Y2pY]; Y2P2 = [time(Y2vX), Y2vY]; 
+R2P1 = [time(R2pX),R2pY]; R2P2 = [time(R2vX), R2vY]; R2Phase = [R2P1; R2P2];
+P2P1 = [time(P2pX),P2pY]; P2P2 = [time(P2vX), P2vY]; P2Phase = [P2P1; P2P2];
+Y2P1 = [time(Y2pX),Y2pY]; Y2P2 = [time(Y2vX), Y2vY]; Y2Phase = [Y2P1; Y2P2];
+R1Phase = [R1P1; R1P2]; P1Phase = [P1P1; P1P2]; Y1Phase = [Y1P1; Y1P2];
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Delete 1st peak of Chip1 if C1 first peak comes before Chip2 first peak
 % Want to be sure C2 (body) starts of leading C1
-% PITCH ONLY (wave from head to tail)
 if P1P1(1,1) < P2P1(1,1)
     P1P1(1,:) = [];
 else
@@ -36,14 +36,14 @@ end
         P1P2(1,:) = [];
     else
     end
-% if Y1P1(1,1) < Y2P1(1,1)
-%     Y1P1(1,:) = [];
-% else
-% end
-%     if Y1P2(1,1) < Y2P2(1,1)
-%         Y1P2(1,:) = [];
-%     else
-%     end
+if Y1P1(1,1) < Y2P1(1,1)
+    Y1P1(1,:) = [];
+else
+end
+    if Y1P2(1,1) < Y2P2(1,1)
+        Y1P2(1,:) = [];
+    else
+    end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Check if vectors are the same length and delete last peak if one is 
 % greater then the other
@@ -106,8 +106,6 @@ elseif length(R1P2) > length(R1P1)
 else
 end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-R1Phase = [R1P1; R1P2]; P1Phase = [P1P1; P1P2]; Y1Phase = [Y1P1; Y1P2];
-R2Phase = [R2P1; R2P2]; P2Phase = [P2P1; P2P2]; Y2Phase = [Y2P1; Y2P2]; 
 
 figure
 subplot(3,1,1)

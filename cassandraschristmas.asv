@@ -96,42 +96,31 @@ end
 InRange1 = find((Err1_acc<cal1.acc_errnorm));
 InRange2 = find(Err2_acc<cal2.acc_errnorm);
 
-Okvar = 0;
-while Okvar == 0
-    %Get the length of the trial
-    %time = input('Enter time : ');
-    start1 = find(abs(cal1.t)<time);
-    start2 = find(abs(cal2.t)<time);
-    start1 = start1(1);
-    start2 = start2(1);
+%Get the length of the trial
+%time = input('Enter time : ');
+start1 = find(abs(cal1.t)<time);
+start2 = find(abs(cal2.t)<time);
+start1 = start1(1);
+start2 = start2(1);
 
-    % Plot the orientations over the length of the trial
-    figure()
-    subplot(2,1,1)
-    plot(cal1.t(start1:end), cal1.orient(start1:end,:));
-    % plot(cal1.t, cal1.orient);
-    title('IMU 1 orientation');
-    xlabel('time');
-    ylabel('angle (degrees)');
-    legend('Roll', 'Pitch', 'Yaw');
-    grid on;
-    subplot(2,1,2)
-    plot(cal2.t(start2:end), cal2.orient(start2:end,:));
-    % plot(cal2.t, cal2.orient);
-    title('IMU 2 orientation');
-    xlabel('time');
-    ylabel('angle (degrees)');
-    legend('Roll', 'Pitch', 'Yaw')
-    grid on;
-    
-    Okvar = input('Does this look ok (1 = yes, 0 = no) : ');
-    if Okvar == 0
-        time = input(['Time currently = ', time, '. Enter a new value : ']);
-        close
-    else
-        time = time;
-    end
-end
+% Plot the orientations over the length of the trial
+figure()
+subplot(2,1,1)
+plot(cal1.t(start1:end), cal1.orient(start1:end,:));
+% plot(cal1.t, cal1.orient);
+title('IMU 1 orientation');
+xlabel('time');
+ylabel('angle (degrees)');
+legend('Roll', 'Pitch', 'Yaw');
+grid on;
+subplot(2,1,2)
+plot(cal2.t(start2:end), cal2.orient(start2:end,:));
+% plot(cal2.t, cal2.orient);
+title('IMU 2 orientation');
+xlabel('time');
+ylabel('angle (degrees)');
+legend('Roll', 'Pitch', 'Yaw')
+grid on;
 
 % Save orientatons from start of trial to end
 t = cal1.t(start1:end);
@@ -183,7 +172,5 @@ YVL = std(WaveInfo.YVLags);
 WaveInfo.Mstd = [PitchPeakLag, PitchValLag, YawPeakLag, YawValLag;
                       PPL,          PVL,         YPL,       YVL    ];
 
-WaveInfo.C1Orient = cal1.orient;
-WaveInfo.C2Orient = cal2.orient;
 
 end
