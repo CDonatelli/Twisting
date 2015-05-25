@@ -1,10 +1,11 @@
-function [ PhaseInfo ] = FindPhaseInfo( Orient1, Orient2, time )
+function [ PhaseInfo ] = FindPhaseInfo( Orient1, Orient2, time, trial )
 % Computes the phase lag between chips 1 and 2
 
 % Seperate Roll Pitch and Yaw
 R1 = Orient1(:,1); P1 = Orient1(:,2); Y1 = Orient1(:,3);
 R2 = Orient2(:,1); P2 = Orient2(:,2); Y2 = Orient2(:,3);
-
+PhaseInfo.C1Corrected = [R1, P1, Y1];
+PhaseInfo.C2Corrected = [R2, P2, Y2];
 [R1pY, R1pX] = findpeaks(R1); [R1vY, R1vX] = findpeaks((-1*R1));
 [P1pY, P1pX] = findpeaks(P1); [P1vY, P1vX] = findpeaks((-1*P1));
 [Y1pY, Y1pX] = findpeaks(Y1); [Y1vY, Y1vX] = findpeaks((-1*Y1));
@@ -109,13 +110,14 @@ end
 R1Phase = [R1P1; R1P2]; P1Phase = [P1P1; P1P2]; Y1Phase = [Y1P1; Y1P2];
 R2Phase = [R2P1; R2P2]; P2Phase = [P2P1; P2P2]; Y2Phase = [Y2P1; Y2P2]; 
 
-figure
+f = figure();
+set(f, 'name', [trial, ' CORRECTED'], 'numbertitle', 'off');
 subplot(3,1,1)
 plot(time, [R1, R2])
 hold on
 plot(R1Phase(:,1), R1Phase(:,2), 'r*'); 
 plot(R2Phase(:,1), R2Phase(:,2), 'c*'); 
-title('Roll'); xlabel('time'); ylabel('angle (degrees)');
+title('Chip Roll'); xlabel('time'); ylabel('angle (degrees)');
 legend('Chip1', 'Chip2');
 
 subplot(3,1,2)
@@ -123,7 +125,7 @@ plot(time, [P1, P2])
 hold on
 plot(P1Phase(:,1), P1Phase(:,2), 'r*'); 
 plot(P2Phase(:,1), P2Phase(:,2), 'c*');
-title('Pitch'); xlabel('time'); ylabel('angle (degrees)');
+title('Chip Pitch'); xlabel('time'); ylabel('angle (degrees)');
 legend('Chip1', 'Chip2');
 
 subplot(3,1,3)
@@ -131,7 +133,7 @@ plot(time, [Y1, Y2])
 hold on
 plot(Y1Phase(:,1), Y1Phase(:,2), 'r*'); 
 plot(Y2Phase(:,1), Y2Phase(:,2), 'c*');
-title('Yaw'); xlabel('time'); ylabel('angle (degrees)');
+title('Chip Yaw'); xlabel('time'); ylabel('angle (degrees)');
 legend('Chip1', 'Chip2');
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -158,6 +160,7 @@ PhaseInfo.PPLags = PitchLag1;
 PhaseInfo.PVLags = PitchLag2;
 PhaseInfo.YPLags = YawLag1;
 PhaseInfo.YVLags = YawLag2;
+PhaseInfo.t = time;
 
 
 end

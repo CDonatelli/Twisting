@@ -1,14 +1,20 @@
 
-function [cal1, cal2, WaveInfo] = cassandraschristmas(trial, gravity, time)
+function [cal1, cal2, WaveInfo, time] = cassandraschristmas(trial, gravity, time)
 % Cassandra and Vishesh
-% clear all
+
+% Line 172 (ish) = be sure to change input depending on orientation of the 
+% chip in question. Chip orientation vs fish orientation may change trial 
+% to trial if you are not consistant with chip placement!
+
 clc
 
+% set calib files for the load_imu function (Eric Tytell)
 calib.chip2world1 = eye(3);
 calib.chip2world2 = eye(3);
 calib.world2chip1 = eye(3);
 calib.world2chip2 = eye(3);
 
+% Load necessary IMU's
 [grav1, grav2] = load_2imu(gravity, calib);
 [cal1, cal2] = load_2imu(trial, calib);
 
@@ -106,7 +112,8 @@ while Okvar == 0
     start2 = start2(1);
 
     % Plot the orientations over the length of the trial
-    figure()
+    f = figure();
+    set(f, 'name', [trial, ' RAW'], 'numbertitle', 'off');
     subplot(2,1,1)
     plot(cal1.t(start1:end), cal1.orient(start1:end,:));
     % plot(cal1.t, cal1.orient);
@@ -135,7 +142,6 @@ end
 
 % Save orientatons from start of trial to end
 t = cal1.t(start1:end);
-
 roll1 = cal1.orient(start1:end,1);
 pitch1 = cal1.orient(start1:end,2);
 yaw1 = cal1.orient(start1:end,3);
@@ -157,10 +163,13 @@ Y1p = polyfit(t, yaw1, 5); yaw1 = yaw1 - polyval(Y1p, t);
 R2p = polyfit(t, roll2, 5); roll2 = roll2 - polyval(R2p, t);
 P2p = polyfit(t, pitch2, 5); pitch2 = pitch2 - polyval(P2p, t);
 Y2p = polyfit(t, yaw2, 5); yaw2 = yaw2 - polyval(Y2p, t);
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+
 % Get Phase info
-WaveInfo = FindPhaseInfo([roll1, pitch1, yaw1], [roll2, pitch2, yaw2], t);
+% Change chip pitch to fish yaw and chip yaw to fish pitch <<---
+WaveInfo = FindPhaseInfo([roll1, pitch1, yaw1], [roll2, pitch2, yaw2], t, trial);
 
 PitchPeakLag = mean(WaveInfo.PPLags);
 PPL = std(WaveInfo.PPLags);
